@@ -1,12 +1,14 @@
 ﻿using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using DAL.Models;
 using DAL.UnitOfWork;
 using MongoDB.Bson;
 
 namespace WebAPIMongoDb.Controllers
 {
+    [EnableCors(origins: "http://localhost:3000", headers: "*", methods: "*")]
     public class RestaurantsController : ApiController
     {
         private readonly UnitOfWork _rUnitOfwork;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Web.Http;
+﻿using System.Web.Http;
 
 namespace WebAPIMongoDb
 {
@@ -11,6 +7,7 @@ namespace WebAPIMongoDb
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
+            config.EnableCors();
 
             // Web API routes
             config.MapHttpAttributeRoutes();
