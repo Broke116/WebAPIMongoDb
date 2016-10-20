@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using DAL.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -22,8 +24,10 @@ namespace DAL.Repository
 
         public async Task<IEnumerable<T>> GetAll()
         {
-            var filter = Builders<T>.Filter.Empty;
-            return await _collection.FindSync<T>(filter).ToListAsync();
+            var filter = Builders<T>.Filter.Where(r => true);
+            var options = new FindOptions<T> { Limit = 10 };
+
+            return await _collection.FindAsync<T>(filter, options).Result.ToListAsync();
         }
 
         public async Task<IEnumerable<T>> Get(Expression<Func<T, ObjectId>> queryExpression, ObjectId id)

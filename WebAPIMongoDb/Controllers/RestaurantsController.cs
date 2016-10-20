@@ -1,7 +1,9 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using System.Web.Http.OData;
 using DAL.Models;
 using DAL.UnitOfWork;
 using MongoDB.Bson;
@@ -9,6 +11,7 @@ using MongoDB.Bson;
 namespace WebAPIMongoDb.Controllers
 {
     [EnableCors(origins: "http://localhost:3000", headers: "*", methods: "*")]
+    [EnableQuery]
     public class RestaurantsController : ApiController
     {
         private readonly UnitOfWork _rUnitOfwork;
@@ -20,12 +23,18 @@ namespace WebAPIMongoDb.Controllers
 
         // GET: api/Restaurants
         public HttpResponseMessage Get()
-        {
-            var restaurants = _rUnitOfwork.Restaurant.GetAll();
+        { 
+            //var restaurants = _rUnitOfwork.Restaurant.GetAll().AsQueryable();
+            var restaurants = _rUnitOfwork.Restaurant.GetAll().Result.AsQueryable();
             if (restaurants != null)
                 return Request.CreateResponse(HttpStatusCode.OK, restaurants);
             return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No restaurant found.");
         }
+
+        /*public IQueryable<Restaurant> Get()
+        {
+            return _rUnitOfwork.Restaurant.GetAll().Result.AsQueryable();
+        }*/
 
         // GET: api/Restaurants/5
         public HttpResponseMessage Get(string id)
@@ -34,6 +43,7 @@ namespace WebAPIMongoDb.Controllers
 
             if (restaurant != null)
                 return Request.CreateResponse(HttpStatusCode.OK, restaurant);
+            
             return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"Restaurant with {id} not found.");
         }
 
